@@ -11,7 +11,7 @@ Ce projet consiste à modéliser et développer les processus utilisés dans les
 
 ## Technologies prévues
 - **Laravel (PHP)**
-- Base de données relationnelle (MySQL ou PostgreSQL).
+- Base de données relationnelle : **PostgreSQL**
 
 ## Organisation
 - Travail sur branches `feat/*` avant merge vers `main`.
