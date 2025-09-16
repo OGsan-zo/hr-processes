@@ -6,18 +6,15 @@ Je vais faire un projet qui consiste a faire les processus utiliser et faites da
 ### Pourquoi
 
 Je veux : 
-- donne moi le nom a mettre pour le repository github qui fasse simple mais qui est claire et pro.
-- creer un repository github et le connecter a mon dossier locale a se repo
-
+- savoir la methode que je dois utiliser pour faire ce projet (orientee objet , ou autres ...)
+- la meilleur technologie a utiliser pour cela (framework) si possible
 
 ### Contexte
 
 * Je travaille avec linux. 
-* J'ai deja git dans mon pc.
-* Mon dossier locale est le suivant. : 
-    zo-kely@zokely-HP-EliteBook-820-G3:~/Documents/Studies/ITU/S5/Mr Tovo/RH$ 
-*
+* J'ai deja java , php , nodes dans mon pc
+
 ### Format attendu
 
 Je veux :
-- les etapes avec les lignes de commandes ,et les instructions que je dois faire
+- Explication simple et facile pour pouvoir mieux choisir.
