@@ -10,3 +10,9 @@ Homestead.json
 /.vscode
 /.phpunit.result.cache
 .phpunit.cache
+_docs/chat/
+_docs/git/
+_docs/methodes/
+_docs/Notion/
+_docs/fonction.md 
+_docs/template.md 
