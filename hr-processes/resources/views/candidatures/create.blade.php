@@ -1,3 +1,6 @@
+@extends('layouts.app')
+
+@section('content')
 <h1>Nouvelle candidature</h1>
 
 @if(session('success'))
@@ -26,3 +29,4 @@
 
     <button type="submit">Postuler</button>
 </form>
+@endsection
