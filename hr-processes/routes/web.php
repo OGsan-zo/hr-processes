@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\CandidatController;
 use App\Http\Controllers\EmployeController;
+use App\Http\Controllers\AnnonceController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -13,3 +14,5 @@ Route::post('/candidats', [CandidatController::class, 'store'])->name('candidats
 
 Route::get('/employes/create', [EmployeController::class, 'create'])->name('employes.create');
 Route::post('/employes', [EmployeController::class, 'store'])->name('employes.store');
+
+Route::resource('annonces', AnnonceController::class);
