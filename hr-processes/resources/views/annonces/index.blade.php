@@ -1,3 +1,6 @@
+@extends('layouts.app')
+
+@section('content')
 <h1>Liste des annonces</h1>
 <a href="{{ route('annonces.create') }}">Nouvelle annonce</a>
 
@@ -17,3 +20,4 @@
         </li>
     @endforeach
 </ul>
+@endsection
