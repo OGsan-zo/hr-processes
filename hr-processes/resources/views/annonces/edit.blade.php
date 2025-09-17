@@ -1,3 +1,6 @@
+@extends('layouts.app')
+
+@section('content')
 <h1>Modifier une annonce</h1>
 <form action="{{ route('annonces.update', $annonce) }}" method="POST">
     @csrf @method('PUT')
@@ -22,3 +25,4 @@
 
     <button type="submit">Mettre à jour</button>
 </form>
+@endsection
