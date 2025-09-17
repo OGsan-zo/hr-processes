@@ -37,6 +37,25 @@ class CandidatController extends Controller
             'cv' => $cvPath,
         ]);
 
-        return redirect()->route('candidats.create')->with('success', 'Candidat enregistré avec succès.');
+        return redirect()->route('candidats.index')->with('success', 'Candidat enregistré avec succès.');
     }
+
+    public function index(Request $request)
+    {
+        $query = Candidat::query();
+
+        if ($request->filled('age')) {
+            $query->where('age', $request->age);
+        }
+        if ($request->filled('diplome')) {
+            $query->where('diplome', 'like', '%' . $request->diplome . '%');
+        }
+        if ($request->filled('adresse')) {
+            $query->where('adresse', 'like', '%' . $request->adresse . '%');
+        }
+
+        $candidats = $query->get();
+        return view('candidats.index', compact('candidats'));
+    }
+
 }
