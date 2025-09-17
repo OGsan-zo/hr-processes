@@ -32,9 +32,9 @@
                     <li class="nav-item">
                         <a class="nav-link" href="{{ route('candidatures.create') }}">Nouvelle Candidature</a>
                     </li>
-                        {{-- <li class="nav-item">
+                        <li class="nav-item">
                             <a class="nav-link" href="{{ route('candidatures.selection') }}">Sélections</a>
-                        </li> --}}
+                        </li>
                     <li class="nav-item">
                         <a class="nav-link" href="{{ route('employes.create') }}">Nouvel Employé</a>
                     </li>
