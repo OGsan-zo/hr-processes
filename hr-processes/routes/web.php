@@ -21,3 +21,6 @@ Route::resource('annonces', AnnonceController::class);
 
 Route::get('candidatures/create', [CandidatureController::class, 'create'])->name('candidatures.create');
 Route::post('candidatures', [CandidatureController::class, 'store'])->name('candidatures.store');
+
+Route::get('/candidatures/selection', [CandidatureController::class, 'selection'])->name('candidatures.selection');
+Route::post('/candidatures/{candidature}/selection', [CandidatureController::class, 'updateSelection'])->name('candidatures.updateSelection');
