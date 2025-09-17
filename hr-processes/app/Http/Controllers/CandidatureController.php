@@ -35,4 +35,22 @@ class CandidatureController extends Controller
 
         return redirect()->back()->with('success', 'Candidature enregistrée avec succès.');
     }
+
+    public function selection()
+    {
+        $candidatures = Candidature::with(['candidat', 'annonce'])->get();
+        return view('candidats.selection', compact('candidatures'));
+    }
+
+    public function updateSelection(Request $request, Candidature $candidature)
+    {
+        $request->validate([
+            'statut' => 'required|in:accepte,refuse'
+        ]);
+
+        $candidature->update(['statut' => $request->statut]);
+
+        return redirect()->route('candidatures.selection')->with('success', 'Statut mis à jour.');
+    }
+
 }
