@@ -19,4 +19,20 @@ class Contrat extends Model
     {
         return $this->belongsTo(Employe::class);
     }
+
+    public function estActif()
+    {
+        return $this->date_fin >= now() && $this->statut === 'actif';
+    }
+
+    public function estExpire()
+    {
+        return $this->date_fin < now();
+    }
+
+    public function duree()
+    {
+        return now()->parse($this->date_debut)->diffInDays(now()->parse($this->date_fin));
+    }
+
 }
