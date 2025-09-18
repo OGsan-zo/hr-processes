@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Candidat;
+use App\Models\Employe;
+use App\Models\Candidature;
 use Illuminate\Http\Request;
 
 class CandidatController extends Controller
@@ -50,12 +52,39 @@ class CandidatController extends Controller
         if ($request->filled('diplome')) {
             $query->where('diplome', 'like', '%' . $request->diplome . '%');
         }
-        if ($request->filled('adresse')) {
-            $query->where('adresse', 'like', '%' . $request->adresse . '%');
-        }
+        // Suppression du filtre adresse car le champ n'existe pas dans le modèle Candidat
 
         $candidats = $query->get();
         return view('candidats.index', compact('candidats'));
     }
 
+    // NOUVELLE MÉTHODE pour Tâche 5 : Transformation candidat → employé
+    public function transform(Request $request, Candidat $candidat)
+    {
+        $request->validate([
+            'poste' => 'required|string|max:100',
+            'salaire' => 'required|numeric|min:0',
+            'competences' => 'nullable|string|max:255',
+        ]);
+
+        // Créer un employé à partir des données du candidat
+        $employe = Employe::create([
+            'nom' => $candidat->nom,  // Copie du nom du candidat
+            'prenom' => $candidat->prenom,  // Copie du prénom du candidat
+            'poste' => $request->poste,
+            'salaire' => $request->salaire,
+            'competences' => $request->competences,
+            'historique' => 'Transformé depuis candidat ID ' . $candidat->id . ' le ' . now()->toDateString(),
+        ]);
+
+        // Mettre à jour la candidature associée (si elle existe et est acceptée)
+        $candidature = Candidature::where('candidat_id', $candidat->id)
+                                  ->where('statut', 'accepte')
+                                  ->first();
+        if ($candidature) {
+            $candidature->update(['statut' => 'embauche']);
+        }
+
+        return redirect()->route('candidats.index')->with('success', 'Candidat transformé en employé avec succès !');
+    }
 }
