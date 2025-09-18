@@ -11,8 +11,15 @@ class ContratController extends Controller
     public function index()
     {
         $contrats = Contrat::with('employe')->get();
+
+        foreach ($contrats as $contrat) {
+            $contrat->statut_calcule = $contrat->estExpire() ? 'expiré' : 'en cours';
+            $contrat->duree_jours = $contrat->duree();
+        }
+
         return view('contrats.index', compact('contrats'));
     }
+
 
     public function create()
     {
