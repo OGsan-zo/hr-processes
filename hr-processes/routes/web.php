@@ -8,14 +8,17 @@ use App\Http\Controllers\CandidatureController;
 use App\Http\Controllers\EntretienController;
 use App\Http\Controllers\ContratController;
 
-
 Route::get('/', function () {
     return view('welcome');
 });
 
+// Routes candidats
 Route::get('/candidats/create', [CandidatController::class, 'create'])->name('candidats.create');
 Route::post('/candidats', [CandidatController::class, 'store'])->name('candidats.store');
 Route::get('/candidats', [CandidatController::class, 'index'])->name('candidats.index');
+
+// NOUVELLE ROUTE pour Tâche 5
+Route::post('/candidats/{candidat}/transform', [CandidatController::class, 'transform'])->name('candidats.transform');
 
 Route::get('/employes/create', [EmployeController::class, 'create'])->name('employes.create');
 Route::post('/employes', [EmployeController::class, 'store'])->name('employes.store');
@@ -31,4 +34,3 @@ Route::post('/candidatures/{candidature}/selection', [CandidatureController::cla
 Route::resource('entretiens', EntretienController::class)->only(['index','create','store']);
 
 Route::resource('contrats', ContratController::class)->only(['index','create','store']);
-
