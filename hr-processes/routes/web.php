@@ -5,6 +5,8 @@ use App\Http\Controllers\CandidatController;
 use App\Http\Controllers\EmployeController;
 use App\Http\Controllers\AnnonceController;
 use App\Http\Controllers\CandidatureController;
+use App\Http\Controllers\EntretienController;
+
 
 Route::get('/', function () {
     return view('welcome');
@@ -24,3 +26,5 @@ Route::post('candidatures', [CandidatureController::class, 'store'])->name('cand
 
 Route::get('/candidatures/selection', [CandidatureController::class, 'selection'])->name('candidatures.selection');
 Route::post('/candidatures/{candidature}/selection', [CandidatureController::class, 'updateSelection'])->name('candidatures.updateSelection');
+
+Route::resource('entretiens', EntretienController::class)->only(['index','create','store']);
