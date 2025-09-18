@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gestion RH - @yield('title')</title>
+    <title>Gestion RH - @yield('title', 'Accueil')</title>
     <!-- Bootstrap CSS via CDN -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
@@ -18,25 +18,25 @@
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav">
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ route('candidats.index') }}">Candidats</a>
+                        <a class="nav-link" href="{{ route('candidats.index') }}">📋 Candidats</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ route('candidats.create') }}">Nouveau Candidat</a>
+                        <a class="nav-link" href="{{ route('candidats.create') }}">➕ Nouveau Candidat</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ route('annonces.index') }}">Annonces</a>
+                        <a class="nav-link" href="{{ route('annonces.index') }}">📢 Annonces</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ route('annonces.create') }}">Nouvelle Annonce</a>
+                        <a class="nav-link" href="{{ route('annonces.create') }}">➕ Nouvelle Annonce</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ route('candidatures.create') }}">Nouvelle Candidature</a>
+                        <a class="nav-link" href="{{ route('candidatures.create') }}">📄 Candidatures</a>
                     </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="{{ route('candidatures.selection') }}">Sélections</a>
-                        </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ route('employes.create') }}">Nouvel Employé</a>
+                        <a class="nav-link" href="{{ route('candidatures.selection') }}">✅ Sélections</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ route('employes.create') }}">👥 Employés</a>
                     </li>
                 </ul>
             </div>
