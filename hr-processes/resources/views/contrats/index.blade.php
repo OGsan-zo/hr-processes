@@ -13,9 +13,10 @@
 <ul>
 @foreach($contrats as $contrat)
     <li>
-        Employé : {{ $contrat->employe->nom }} ({{ $contrat->type }})
-        - du {{ $contrat->date_debut }} au {{ $contrat->date_fin }}
-        - Renouvellements : {{ $contrat->renouvellements }}
+        Employé : {{ $contrat->employe->nom }} ({{ $contrat->type }}) <br>
+        Du {{ $contrat->date_debut }} au {{ $contrat->date_fin }} <br>
+        Durée : {{ $contrat->duree_jours }} jours <br>
+        Statut : {{ $contrat->statut_calcule }}
     </li>
 @endforeach
 </ul>
