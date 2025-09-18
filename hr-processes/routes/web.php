@@ -6,6 +6,7 @@ use App\Http\Controllers\EmployeController;
 use App\Http\Controllers\AnnonceController;
 use App\Http\Controllers\CandidatureController;
 use App\Http\Controllers\EntretienController;
+use App\Http\Controllers\ContratController;
 
 
 Route::get('/', function () {
@@ -28,3 +29,6 @@ Route::get('/candidatures/selection', [CandidatureController::class, 'selection'
 Route::post('/candidatures/{candidature}/selection', [CandidatureController::class, 'updateSelection'])->name('candidatures.updateSelection');
 
 Route::resource('entretiens', EntretienController::class)->only(['index','create','store']);
+
+Route::resource('contrats', ContratController::class)->only(['index','create','store']);
+
