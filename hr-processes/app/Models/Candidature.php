@@ -13,13 +13,19 @@ class Candidature extends Model
         'statut'
     ];
 
+    /**
+     * RELATION : Une candidature appartient à un candidat
+     */
     public function candidat()
     {
-        return $this->belongsTo(Candidat::class);
+        return $this->belongsTo(Candidat::class, 'candidat_id');
     }
 
+    /**
+     * RELATION : Une candidature appartient à une annonce
+     */
     public function annonce()
     {
-        return $this->belongsTo(Annonce::class);
+        return $this->belongsTo(Annonce::class, 'annonce_id');
     }
 }
