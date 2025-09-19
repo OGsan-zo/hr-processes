@@ -36,3 +36,5 @@ Route::resource('entretiens', EntretienController::class)->only(['index','create
 Route::resource('contrats', ContratController::class)->only(['index','create','store']);
 Route::get('/candidats/classify', [CandidatController::class, 'classify'])->name('candidats.classify');
 Route::post('/candidats/classify', [CandidatController::class, 'classify'])->name('candidats.classify.post');
+
+Route::get('/candidats/{candidat}/migrate', [CandidatController::class, 'migrate'])->name('candidats.migrate');
