@@ -15,36 +15,39 @@ class Candidat extends Model
         'diplome',
         'cv',
         'status',
-        'competences',           // Nouveau
-        'score_competences',     // Nouveau
-        'score_profil',          // Nouveau
-        'score_global'           // Nouveau
+        'competences',
+        'score_competences',
+        'score_profil',
+        'score_global'
     ];
 
-    // Nouvelle méthode pour calculer le score automatique
+    /**
+     * RELATION : Un candidat a plusieurs candidatures
+     */
+    public function candidatures()
+    {
+        return $this->hasMany(Candidature::class, 'candidat_id');
+    }
+
+    // Méthodes de scoring
     public function calculerScore($annonceCompetences = [])
     {
         $score = 0;
         $this->score_competences = 0;
         $this->score_profil = 0;
 
-        // Score compétences (comparaison avec l'annonce)
         if ($this->competences && $annonceCompetences) {
-            $candidatComps = explode(',', strtolower(trim($this->competences)));
+            $candidatComps = array_map('trim', explode(',', strtolower(trim($this->competences))));
             $annonceComps = array_map('strtolower', $annonceCompetences);
-            
             $matchCount = count(array_intersect($candidatComps, $annonceComps));
-            $this->score_competences = min($matchCount * 20, 100); // Max 100
+            $this->score_competences = min($matchCount * 20, 100);
             $score += $this->score_competences;
         }
 
-        // Score profil (basé sur l'âge et diplôme)
         $this->score_profil = $this->calculerScoreProfil();
         $score += $this->score_profil;
 
-        // Score global (moyenne pondérée)
         $this->score_global = round($score / 2);
-        
         $this->save();
         return $this->score_global;
     }
@@ -53,19 +56,20 @@ class Candidat extends Model
     {
         $score = 0;
         
-        // Âge (optimal 25-35 ans)
+        // Score âge
         if ($this->age >= 25 && $this->age <= 35) {
             $score += 50;
         } elseif ($this->age >= 22 && $this->age <= 40) {
             $score += 30;
         }
         
-        // Diplôme
+        // Score diplôme
         if ($this->diplome) {
-            $diplomeScore = match(strtolower($this->diplome)) {
-                'master', 'bac+5', 'ingénieur' => 50,
-                'licence', 'bac+3', 'bts' => 40,
-                'bac', 'bac+2' => 30,
+            $diplome = strtolower(trim($this->diplome));
+            $diplomeScore = match(true) {
+                str_contains($diplome, 'master') || str_contains($diplome, 'bac+5') || str_contains($diplome, 'ingénieur') => 50,
+                str_contains($diplome, 'licence') || str_contains($diplome, 'bac+3') || str_contains($diplome, 'bts') => 40,
+                str_contains($diplome, 'bac') || str_contains($diplome, 'bac+2') => 30,
                 default => 20
             };
             $score += $diplomeScore;

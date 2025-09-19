@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('layouts.rh')
 
 @section('content')
 <h1>Nouvelle annonce</h1>
