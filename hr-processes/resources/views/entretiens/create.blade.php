@@ -1,5 +1,5 @@
 
-@extends('layouts.app')
+@extends('layouts.rh')
 
 @section('content')
 <h1>Planifier un entretien</h1>
