@@ -58,7 +58,7 @@ class CandidatController extends Controller
         return view('candidats.index', compact('candidats'));
     }
 
-    // NOUVELLE MÉTHODE pour Tâche 5 : Transformation candidat → employé
+    // Transformation candidat → employé
     public function transform(Request $request, Candidat $candidat)
     {
         $request->validate([
@@ -87,4 +87,53 @@ class CandidatController extends Controller
 
         return redirect()->route('candidats.index')->with('success', 'Candidat transformé en employé avec succès !');
     }
+
+    public function classify(Request $request)
+    {
+        $annonce_id = $request->input('annonce_id');
+        $annonces = \App\Models\Annonce::where('statut', 'active')->get();
+        
+        if ($request->filled('calcule_scores')) {
+            $candidats = \App\Models\Candidat::whereHas('candidatures', function($q) use ($annonce_id) {
+                $q->where('annonce_id', $annonce_id);
+            })->get();
+            
+            // Récupérer les compétences de l'annonce
+            $annonce = \App\Models\Annonce::find($annonce_id);
+            $annonceCompetences = $this->extraireCompetencesAnnonce($annonce->description ?? '');
+            
+            foreach ($candidats as $candidat) {
+                $candidat->calculerScore($annonceCompetences);
+            }
+            
+            return redirect()->back()->with('success', 'Scores calculés pour ' . $candidats->count() . ' candidats.');
+        }
+        
+        $candidats = \App\Models\Candidat::with('candidatures')
+            ->when($request->filled('annonce_id'), function($query) use ($request) {
+                $query->whereHas('candidatures', function($q) use ($request) {
+                    $q->where('annonce_id', $request->annonce_id);
+                });
+            })
+            ->orderByDesc('score_global')
+            ->get();
+        
+        return view('candidats.classify', compact('candidats', 'annonces'));
+    }
+
+    private function extraireCompetencesAnnonce($description)
+    {
+        // Logique simple pour extraire les compétences de la description
+        $motsCles = ['php', 'laravel', 'javascript', 'react', 'mysql', 'postgresql', 'docker'];
+        $competences = [];
+        
+        foreach ($motsCles as $mot) {
+            if (stripos($description, $mot) !== false) {
+                $competences[] = $mot;
+            }
+        }
+        
+        return $competences;
+    }
+
 }
