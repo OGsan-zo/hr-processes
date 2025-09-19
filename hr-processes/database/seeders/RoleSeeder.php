@@ -10,10 +10,8 @@ class RoleSeeder extends Seeder
 {
     public function run()
     {
-        // Reset cached roles and permissions
         app()[\Spatie\Permission\PermissionRegistrar::class]->forgetCachedPermissions();
 
-        // Créer les permissions
         $permissions = [
             'view-candidats', 'create-candidats', 'classify-candidats', 'migrate-candidats',
             'view-annonces', 'create-annonces', 'edit-annonces', 'delete-annonces',
@@ -24,15 +22,20 @@ class RoleSeeder extends Seeder
         ];
 
         foreach ($permissions as $permission) {
-            Permission::create(['name' => $permission]);
+            if (!Permission::where('name', $permission)->exists()) {
+                Permission::create(['name' => $permission]);
+            }
         }
 
-        // Créer les rôles et assigner les permissions
-        $adminRole = Role::create(['name' => 'admin']);
-        $adminRole->givePermissionTo(Permission::all());
+        $roles = ['admin', 'manager', 'employe'];
+        $roleObjects = [];
+        foreach ($roles as $roleName) {
+            $roleObjects[$roleName] = Role::firstOrCreate(['name' => $roleName]);
+        }
 
-        $managerRole = Role::create(['name' => 'manager']);
-        $managerRole->givePermissionTo([
+        $roleObjects['admin']->syncPermissions(Permission::all());
+
+        $roleObjects['manager']->syncPermissions([
             'view-candidats', 'create-candidats', 'classify-candidats', 'migrate-candidats',
             'view-annonces', 'create-annonces', 'edit-annonces', 'delete-annonces',
             'view-candidatures', 'manage-selections',
@@ -40,7 +43,6 @@ class RoleSeeder extends Seeder
             'view-profile'
         ]);
 
-        $employeRole = Role::create(['name' => 'employe']);
-        $employeRole->givePermissionTo(['view-profile', 'update-profile']);
+        $roleObjects['employe']->syncPermissions(['view-profile', 'update-profile']);
     }
 }
