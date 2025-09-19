@@ -10,35 +10,37 @@ class RoleSeeder extends Seeder
 {
     public function run()
     {
-        // Créer les rôles
-        $adminRole = Role::create(['name' => 'admin']);
-        $managerRole = Role::create(['name' => 'manager']);
-        $employeRole = Role::create(['name' => 'employe']);
+        // Reset cached roles and permissions
+        app()[\Spatie\Permission\PermissionRegistrar::class]->forgetCachedPermissions();
 
         // Créer les permissions
         $permissions = [
-            'view-candidats', 'create-candidats', 'edit-candidats', 'delete-candidats',
+            'view-candidats', 'create-candidats', 'classify-candidats', 'migrate-candidats',
             'view-annonces', 'create-annonces', 'edit-annonces', 'delete-annonces',
             'view-candidatures', 'manage-selections',
-            'view-employes', 'create-employes', 'edit-employes',
+            'view-employes', 'create-employes',
             'manage-contrats', 'manage-entretiens',
-            'view-profile'
+            'view-profile', 'update-profile'
         ];
 
         foreach ($permissions as $permission) {
             Permission::create(['name' => $permission]);
         }
 
-        // Assigner les permissions aux rôles
+        // Créer les rôles et assigner les permissions
+        $adminRole = Role::create(['name' => 'admin']);
         $adminRole->givePermissionTo(Permission::all());
+
+        $managerRole = Role::create(['name' => 'manager']);
         $managerRole->givePermissionTo([
-            'view-candidats', 'create-candidats', 'edit-candidats',
-            'view-annonces', 'create-annonces', 'edit-annonces',
+            'view-candidats', 'create-candidats', 'classify-candidats', 'migrate-candidats',
+            'view-annonces', 'create-annonces', 'edit-annonces', 'delete-annonces',
             'view-candidatures', 'manage-selections',
             'view-employes', 'create-employes',
-            'manage-contrats', 'manage-entretiens',
             'view-profile'
         ]);
-        $employeRole->givePermissionTo('view-profile');
+
+        $employeRole = Role::create(['name' => 'employe']);
+        $employeRole->givePermissionTo(['view-profile', 'update-profile']);
     }
 }
