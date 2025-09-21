@@ -26,6 +26,10 @@
                             <x-nav-link :href="route('candidats.classify')" :active="request()->routeIs('candidats.classify')">
                                 📊 Classement
                             </x-nav-link>
+
+                            <x-nav-link :href="route('candidatures.selection')" :active="request()->routeIs('candidatures.selection')">
+                                ✅ Candidatures
+                            </x-nav-link>
                         @endif
 
                         {{-- Annonces - VISIBLE POUR ADMIN ET MANAGER --}}
@@ -175,6 +179,9 @@
                     </x-responsive-nav-link>
                     <x-responsive-nav-link :href="route('candidats.classify')" :active="request()->routeIs('candidats.classify')">
                         📊 Classement
+                    </x-responsive-nav-link>
+                    <x-responsive-nav-link :href="route('candidatures.selection')" :active="request()->routeIs('candidatures.selection')">
+                        ✅ Candidatures
                     </x-responsive-nav-link>
                 @endif
 
