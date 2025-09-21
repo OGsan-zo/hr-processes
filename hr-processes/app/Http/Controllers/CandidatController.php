@@ -24,11 +24,18 @@ class CandidatController extends Controller
             'age' => 'required|integer|min:18',
             'diplome' => 'nullable|string|max:150',
             'cv' => 'nullable|file|mimes:pdf|max:2048',
+            'competences' => 'nullable|string|max:255',  // Facultatif si extrait
         ]);
 
         $cvPath = null;
+        $competences = $request->competences;  // Manuel par défaut
+
         if ($request->hasFile('cv')) {
             $cvPath = $request->file('cv')->store('cvs', 'public');
+            
+            // Analyse CV pour extraire compétences (simulation simple - utilise ton CvController si implémenté)
+            $contenu = file_get_contents(Storage::path($cvPath));
+            $competences = $this->extraireCompetencesCv($contenu);  // Fonction d'extraction
         }
 
         Candidat::create([
@@ -37,10 +44,29 @@ class CandidatController extends Controller
             'age' => $request->age,
             'diplome' => $request->diplome,
             'cv' => $cvPath,
+            'competences' => $competences,
         ]);
 
         return redirect()->route('candidats.index')->with('success', 'Candidat enregistré avec succès.');
     }
+
+    // Ajoute cette méthode privée
+    private function extraireCompetencesCv($contenu)
+    {
+        $motsCles = ['php', 'laravel', 'javascript', 'react', 'mysql', 'excel', 'word', 'communication'];
+        $competences = [];
+        
+        $texte = strtolower($contenu);
+        
+        foreach ($motsCles as $mot) {
+            if (stripos($texte, $mot) !== false) {
+                $competences[] = ucfirst($mot);
+            }
+        }
+        
+        return implode(',', $competences);
+    }
+
 
     public function index(Request $request)
     {
