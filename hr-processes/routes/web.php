@@ -59,4 +59,8 @@ Route::middleware(['auth'])->group(function () {
 
     // Contrats (Tâches 2-4 jeudi)
     Route::resource('contrats', ContratController::class)->only(['index','create','store']);
+
+    Route::get('/cvs', [CvController::class, 'index'])->name('cvs.index');
+    Route::post('/cvs/{candidature}/analyse', [CvController::class, 'analyse'])->name('cvs.analyse');
+
 });
