@@ -69,5 +69,8 @@ Route::middleware(['auth'])->group(function () {
     Route::resource('tests', TestController::class)->only(['index', 'create', 'store', 'show', 'edit', 'update', 'destroy']);
     Route::post('tests/{test}/questions', [TestController::class, 'addQuestion'])->name('tests.questions.add');
 
+    Route::get('/tests/{test}/pass', [TestController::class, 'passTest'])->name('tests.pass');
+    Route::post('/tests/{test}/pass', [TestController::class, 'passTest']);
+    Route::get('/tests/{test}/result', [TestController::class, 'result'])->name('tests.result');
 
 });
