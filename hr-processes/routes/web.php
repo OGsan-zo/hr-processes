@@ -9,6 +9,9 @@ use App\Http\Controllers\CandidatureController;
 use App\Http\Controllers\EntretienController;
 use App\Http\Controllers\ContratController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\CvController;
+use App\Http\Controllers\TestController;
+
 
 // Routes publiques
 Route::get('/', function () {
@@ -62,5 +65,9 @@ Route::middleware(['auth'])->group(function () {
 
     Route::get('/cvs', [CvController::class, 'index'])->name('cvs.index');
     Route::post('/cvs/{candidature}/analyse', [CvController::class, 'analyse'])->name('cvs.analyse');
+
+    Route::resource('tests', TestController::class)->only(['index', 'create', 'store', 'show', 'edit', 'update', 'destroy']);
+    Route::post('tests/{test}/questions', [TestController::class, 'addQuestion'])->name('tests.questions.add');
+
 
 });
