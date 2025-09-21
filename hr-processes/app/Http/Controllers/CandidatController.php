@@ -6,6 +6,8 @@ use App\Models\Candidat;
 use App\Models\Employe;
 use App\Models\Candidature;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
+use Smalot\PdfParser\Parser;
 
 class CandidatController extends Controller
 {
@@ -50,21 +52,39 @@ class CandidatController extends Controller
         return redirect()->route('candidats.index')->with('success', 'Candidat enregistré avec succès.');
     }
 
-    // Ajoute cette méthode privée
+
     private function extraireCompetencesCv($contenu)
     {
-        $motsCles = ['php', 'laravel', 'javascript', 'react', 'mysql', 'excel', 'word', 'communication'];
-        $competences = [];
-        
-        $texte = strtolower($contenu);
-        
-        foreach ($motsCles as $mot) {
-            if (stripos($texte, $mot) !== false) {
-                $competences[] = ucfirst($mot);
+        try {
+            // Parser le contenu PDF
+            $parser = new Parser();
+            $pdf = $parser->parseContent($contenu);
+            $texte = $pdf->getText();
+            
+            $motsCles = [
+                'php', 'laravel', 'javascript', 'react', 'mysql', 'postgresql', 'docker',
+                'git', 'aws', 'python', 'java', 'html', 'css', 'bootstrap', 'vue', 'angular',
+                'symfony', 'node', 'express', 'mongodb', 'redis', 'linux', 'windows',
+                'communication', 'travail d\'équipe', 'agile', 'scrum', 'devops',
+                'gestion de projet', 'leadership', 'résolution de problèmes'
+            ];
+            
+            $competencesTrouvees = [];
+            $texteMinuscule = strtolower($texte);
+            
+            foreach ($motsCles as $mot) {
+                if (stripos($texteMinuscule, $mot) !== false) {
+                    $competencesTrouvees[] = ucfirst($mot);
+                }
             }
+            
+            $competencesTrouvees = array_unique($competencesTrouvees);
+            return !empty($competencesTrouvees) ? implode(', ', $competencesTrouvees) : $request->competences;
+            
+        } catch (\Exception $e) {
+            // En cas d'erreur, retourner les compétences manuelles
+            return $request->competences;
         }
-        
-        return implode(',', $competences);
     }
 
 
