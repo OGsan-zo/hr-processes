@@ -6,6 +6,8 @@ use App\Models\Candidat;
 use App\Models\Annonce;
 use App\Models\Candidature;
 use App\Models\Employe;
+use App\Models\Affiliation;
+use App\Models\Test;
 use Illuminate\Http\Request;
 
 class HomeController extends Controller
@@ -15,12 +17,14 @@ class HomeController extends Controller
         $user = auth()->user();
         $role = $user->roles->first()->name ?? 'unknown';
 
-        // Statistiques
+        // Statistiques principales
         $stats = [
             'candidats' => Candidat::count(),
             'annonces' => Annonce::where('statut', 'active')->count(),
             'candidatures' => Candidature::count(),
             'employes' => Employe::count(),
+            'tests' => Test::where('statut', 'actif')->count(),
+            'affiliations' => Affiliation::valide()->count(),
         ];
 
         // Candidatures par statut
@@ -28,12 +32,27 @@ class HomeController extends Controller
             ->groupBy('statut')
             ->pluck('count', 'statut');
 
-        // Top candidats
+        // Top candidats par score
         $topCandidats = Candidat::orderByDesc('score_global')
             ->limit(5)
             ->select('nom', 'prenom', 'score_global', 'id')
             ->get();
 
-        return view('dashboard', compact('role', 'stats', 'candidaturesParStatut', 'topCandidats'));
+        // Tests récents
+        $testsRecents = Test::withCount('questions')
+            ->orderBy('created_at', 'desc')
+            ->limit(3)
+            ->get();
+
+        // Affiliations expirantes
+        $affiliationsExpirantes = Affiliation::expirant()->count();
+
+        // CVs analysés
+        $cvsAnalyses = \App\Models\CvAnalyse::count();
+
+        return view('dashboard', compact(
+            'role', 'stats', 'candidaturesParStatut', 'topCandidats',
+            'testsRecents', 'affiliationsExpirantes', 'cvsAnalyses'
+        ));
     }
 }
