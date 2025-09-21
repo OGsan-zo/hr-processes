@@ -11,6 +11,7 @@ use App\Http\Controllers\ContratController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\CvController;
 use App\Http\Controllers\TestController;
+use App\Http\Controllers\AffiliationController;
 
 
 // Routes publiques
@@ -72,5 +73,9 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/tests/{test}/pass', [TestController::class, 'passTest'])->name('tests.pass');
     Route::post('/tests/{test}/pass', [TestController::class, 'passTest']);
     Route::get('/tests/{test}/result', [TestController::class, 'result'])->name('tests.result');
+
+    Route::resource('affiliations', AffiliationController::class)->only(['index', 'create', 'store', 'show', 'edit', 'update', 'destroy']);
+    Route::post('affiliations/{affiliation}/renouveler', [AffiliationController::class, 'renouveler'])->name('affiliations.renouveler');
+
 
 });
