@@ -26,18 +26,18 @@ class CandidatController extends Controller
             'age' => 'required|integer|min:18',
             'diplome' => 'nullable|string|max:150',
             'cv' => 'nullable|file|mimes:pdf|max:2048',
-            'competences' => 'nullable|string|max:255',  // Facultatif si extrait
+            'competences' => 'nullable|string|max:255',
         ]);
 
         $cvPath = null;
-        $competences = $request->competences;  // Manuel par défaut
+        $competences = $request->competences;
 
         if ($request->hasFile('cv')) {
             $cvPath = $request->file('cv')->store('cvs', 'public');
             
-            // Analyse CV pour extraire compétences (simulation simple - utilise ton CvController si implémenté)
-            $contenu = file_get_contents(Storage::path($cvPath));
-            $competences = $this->extraireCompetencesCv($contenu);  // Fonction d'extraction
+            // CORRECTION : Utiliser Storage pour lire le fichier depuis le disk 'public'
+            $contenu = Storage::disk('public')->get($cvPath);
+            $competences = $this->extraireCompetencesCv($contenu);
         }
 
         Candidat::create([
@@ -51,7 +51,6 @@ class CandidatController extends Controller
 
         return redirect()->route('candidats.index')->with('success', 'Candidat enregistré avec succès.');
     }
-
 
     private function extraireCompetencesCv($contenu)
     {
