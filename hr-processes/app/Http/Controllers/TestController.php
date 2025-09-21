@@ -109,4 +109,67 @@ class TestController extends Controller
 
         return redirect()->route('tests.show', $test)->with('success', 'Question ajoutée.');
     }
+
+    public function passTest(Test $test, Request $request)
+    {
+        $this->checkPermission('view-candidatures');
+        
+        if ($test->statut !== 'actif') {
+            return redirect()->back()->with('error', 'Test inactif.');
+        }
+
+        $test->load(['questions.reponses']);
+        
+        if ($request->isMethod('post')) {
+            $score = 0;
+            $reponses = [];
+            
+            foreach ($test->questions as $question) {
+                $reponseId = $request->input("question_{$question->id}");
+                $reponses[$question->id] = $reponseId;
+                
+                if ($reponseId) {
+                    $reponse = Reponse::find($reponseId);
+                    if ($reponse && $reponse->correcte) {
+                        $score += $question->points;
+                    }
+                }
+            }
+            
+            // Enregistrer résultat
+            ResultatTest::updateOrCreate(
+                [
+                    'candidat_id' => auth()->id(), // Assumer user = candidat pour simplifier
+                    'test_id' => $test->id
+                ],
+                [
+                    'score_obtenu' => $score,
+                    'score_max' => $test->questions->sum('points'),
+                    'pourcentage' => ($score / $test->questions->sum('points')) * 100,
+                    'reponses_utilisateur' => $reponses,
+                    'date_passe' => now(),
+                ]
+            );
+
+            return redirect()->route('tests.result', $test)->with('result', $score);
+        }
+
+        return view('tests.pass', compact('test'));
+    }
+
+    public function result(Test $test)
+    {
+        $this->checkPermission('view-candidatures');
+        $resultat = ResultatTest::where('test_id', $test->id)
+            ->where('candidat_id', auth()->id())
+            ->latest()
+            ->first();
+            
+        if (!$resultat) {
+            return redirect()->route('tests.show', $test)->with('error', 'Aucun résultat trouvé.');
+        }
+
+        return view('tests.result', compact('test', 'resultat'));
+    }
+
 }
