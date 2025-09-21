@@ -69,6 +69,28 @@
                                 📋 Contrats
                             </x-nav-link>
                         @endif
+
+                        {{-- CV Analysis - Visible pour Admin et Manager --}}
+                        @if(auth()->user()->hasRole('admin') || auth()->user()->hasRole('manager'))
+                            <x-nav-link :href="route('cvs.index')" :active="request()->routeIs('cvs.*')">
+                                📄 Analyse CV
+                            </x-nav-link>
+                        @endif
+
+                        {{-- Tests QCM - Visible pour Admin et Manager --}}
+                        @if(auth()->user()->hasRole('admin') || auth()->user()->hasRole('manager'))
+                            <x-nav-link :href="route('tests.index')" :active="request()->routeIs('tests.*')">
+                                🧪 Tests QCM
+                            </x-nav-link>
+                        @endif
+
+                        {{-- Affiliations - Visible pour Admin seulement --}}
+                        @if(auth()->user()->hasRole('admin'))
+                            <x-nav-link :href="route('affiliations.index')" :active="request()->routeIs('affiliations.*')">
+                                🏢 Affiliations
+                            </x-nav-link>
+                        @endif
+
                     @endauth
                 </div>
             </div>
@@ -188,6 +210,21 @@
                         📋 Contrats
                     </x-responsive-nav-link>
                 @endif
+                @if(auth()->user()->hasRole('admin') || auth()->user()->hasRole('manager'))
+                    <x-responsive-nav-link :href="route('cvs.index')" :active="request()->routeIs('cvs.*')">
+                        📄 Analyse CV
+                    </x-responsive-nav-link>
+                    <x-responsive-nav-link :href="route('tests.index')" :active="request()->routeIs('tests.*')">
+                        🧪 Tests QCM
+                    </x-responsive-nav-link>
+                @endif
+
+                @if(auth()->user()->hasRole('admin'))
+                    <x-responsive-nav-link :href="route('affiliations.index')" :active="request()->routeIs('affiliations.*')">
+                        🏢 Affiliations
+                    </x-responsive-nav-link>
+                @endif
+
             @endauth
         </div>
 
