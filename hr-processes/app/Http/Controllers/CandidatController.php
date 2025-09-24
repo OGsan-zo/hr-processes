@@ -49,8 +49,7 @@ class CandidatController extends Controller
             $gemini = new GeminiService();
             $analyse = $gemini->analyseCv($texteCv);
 
-            dd($analyse);
-
+        
             // Mettre à jour les champs
             $competences = $analyse['competences'] ?? '';
             $score_profil = $analyse['score_profil'] ?? 0;
