@@ -60,6 +60,8 @@ Route::middleware(['auth'])->group(function () {
 
     // Entretiens (Tâche 1 jeudi)
     Route::resource('entretiens', EntretienController::class)->only(['index','create','store']);
+    Route::get('/entretiens/calendar', [EntretienController::class, 'calendar'])->name('entretiens.calendar');
+    Route::get('/entretiens/events', [EntretienController::class, 'getEvents'])->name('entretiens.events');
 
     // Contrats (Tâches 2-4 jeudi)
     Route::resource('contrats', ContratController::class)->only(['index','create','store']);
