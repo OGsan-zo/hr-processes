@@ -2,25 +2,23 @@
 
 namespace App\Services;
 
-use Google\Client;
-use Google\Service\GenerativeLanguage;
+use Google\Cloud\GenerativeAI;
 
 class GeminiService
 {
-    protected $service;
+    protected $generativeAI;
 
     public function __construct()
     {
-        $client = new Client();
-        $client->setApplicationName('RH Project');
-        $client->setDeveloperKey(env('GEMINI_API_KEY'));
-        $this->service = new GenerativeLanguage($client);
+        // Initialize Gemini client with API key
+        $this->generativeAI = new GenerativeAI(env('GEMINI_API_KEY'));
     }
 
     public function analyseCv($texteCv, $annonceDescription = '')
     {
-        $modelName = 'models/gemini-1.5-flash';
+        $modelName = 'gemini-1.5-flash';
 
+        // Construct prompt
         $prompt = "Analyse ce CV : \n\n$texteCv\n\n";
         $prompt .= "1. Extraire les compétences principales (liste séparée par virgules).\n";
         $prompt .= "2. Calculer score profil (0-100) basé sur âge, diplôme, expérience.\n";
@@ -29,22 +27,28 @@ class GeminiService
         $prompt .= "Si description annonce fournie : '$annonceDescription', suggérer poste adapté.\n";
         $prompt .= "Répondre en JSON : { \"competences\": \"liste,sep,virgules\", \"score_profil\": 0, \"score_cv\": 0, \"score_global\": 0, \"poste_suggere\": \"suggestion poste\" }";
 
-        $response = $this->service->models->generateContent($modelName, [
-            'contents' => [
-                [
-                    'parts' => [
-                        ['text' => $prompt]
-                    ]
-                ]
-            ]
-        ]);
+        try {
+            // Call Gemini API
+            $response = $this->generativeAI->model($modelName)->generateContent($prompt);
 
-        $generatedText = $response->getCandidates()[0]->getContent()->getParts()[0]->getText();
+            // Extract raw text
+            $generatedText = $response->text();
 
-        // Nettoyer et parser JSON
-        $generatedText = trim($generatedText, '`json');
-        $generatedText = trim($generatedText, '`');
+            // Clean and parse JSON
+            $generatedText = trim($generatedText, '`json');
+            $generatedText = trim($generatedText, '`');
 
-        return json_decode($generatedText, true);
+            return json_decode($generatedText, true);
+        } catch (\Exception $e) {
+            \Log::error('Gemini API error: ' . $e->getMessage());
+            return [
+                'competences' => '',
+                'score_profil' => 0,
+                'score_cv' => 0,
+                'score_global' => 0,
+                'poste_suggere' => null,
+                'error' => 'Erreur API: ' . $e->getMessage()
+            ];
+        }
     }
 }
