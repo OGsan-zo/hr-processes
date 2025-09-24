@@ -28,4 +28,12 @@ class Candidature extends Model
     {
         return $this->belongsTo(Annonce::class, 'annonce_id');
     }
+
+    /**
+     * RELATION : Une candidature a une analyse de CV
+     */
+    public function cvAnalyse()
+    {
+        return $this->hasOne(CvAnalyse::class, 'candidature_id');
+    }
 }
