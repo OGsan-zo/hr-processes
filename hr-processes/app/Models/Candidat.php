@@ -18,7 +18,8 @@ class Candidat extends Model
         'competences',
         'score_competences',
         'score_profil',
-        'score_global'
+        'score_global',
+        'poste_suggere'
     ];
 
     /**

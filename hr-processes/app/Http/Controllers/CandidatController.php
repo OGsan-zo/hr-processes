@@ -8,6 +8,7 @@ use App\Models\Candidature;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Smalot\PdfParser\Parser;
+use App\Services\GeminiService;  // AJOUT : Service Gemini
 
 class CandidatController extends Controller
 {
@@ -31,13 +32,30 @@ class CandidatController extends Controller
 
         $cvPath = null;
         $competences = $request->competences;
+        $score_competences = 0;
+        $score_profil = 0;
+        $score_global = 0;
+        $poste_suggere = null;
 
         if ($request->hasFile('cv')) {
             $cvPath = $request->file('cv')->store('cvs', 'public');
             
-            // CORRECTION : Utiliser Storage pour lire le fichier depuis le disk 'public'
-            $contenu = Storage::disk('public')->get($cvPath);
-            $competences = $this->extraireCompetencesCv($contenu);
+            // Parser PDF en texte
+            $parser = new Parser();
+            $pdf = $parser->parseFile(Storage::disk('public')->path($cvPath));
+            $texteCv = $pdf->getText();
+
+            // Envoyer à Gemini pour analyse
+            $gemini = new GeminiService();
+            $analyse = $gemini->analyseCv($texteCv);
+
+        
+            // Mettre à jour les champs
+            $competences = $analyse['competences'] ?? '';
+            $score_profil = $analyse['score_profil'] ?? 0;
+            $score_competences = $analyse['score_cv'] ?? 0;  // Utilise score CV comme score competences
+            $score_global = $analyse['score_global'] ?? 0;
+            $poste_suggere = $analyse['poste_suggere'] ?? null;
         }
 
         Candidat::create([
@@ -47,6 +65,10 @@ class CandidatController extends Controller
             'diplome' => $request->diplome,
             'cv' => $cvPath,
             'competences' => $competences,
+            'score_competences' => $score_competences,
+            'score_profil' => $score_profil,
+            'score_global' => $score_global,
+            'poste_suggere' => $poste_suggere,
         ]);
 
         return redirect()->route('candidats.index')->with('success', 'Candidat enregistré avec succès.');
@@ -114,7 +136,7 @@ class CandidatController extends Controller
 
         // Créer un employé à partir des données du candidat
         $employe = Employe::create([
-            'nom' => $candidat->nom,  // Copie du nom du candidat
+            'nom' => $candidat->nom,        // Copie du nom du candidat
             'prenom' => $candidat->prenom,  // Copie du prénom du candidat
             'poste' => $request->poste,
             'salaire' => $request->salaire,
