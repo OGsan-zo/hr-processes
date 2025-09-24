@@ -48,6 +48,7 @@
                     <th>Âge</th>
                     <th>Diplôme</th>
                     <th>Actions</th>
+                    <th>Poste suggéré</th>
                 </tr>
             </thead>
             <tbody>
@@ -57,6 +58,7 @@
                         <td>{{ $candidat->prenom }}</td>
                         <td>{{ $candidat->age }}</td>
                         <td>{{ $candidat->diplome ?? 'N/A' }}</td>
+                        <td>{{ $candidat->poste_suggere ?? 'N/A' }}</td>
                         <td>
                             <!-- Formulaire de transformation en employé -->
                             <form action="{{ route('candidats.transform', $candidat) }}" method="POST" class="d-inline">
