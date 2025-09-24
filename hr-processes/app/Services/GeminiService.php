@@ -2,25 +2,25 @@
 
 namespace App\Services;
 
-use GeminiAPI\Gemini;
+use GeminiAPI\Client; // Correct namespace
 use GeminiAPI\Resources\Parts\TextPart;
 use Illuminate\Support\Facades\Log;
 
 class GeminiService
 {
-    protected $gemini;
+    protected $client;
 
     public function __construct()
     {
-        // Initialiser le client Gemini avec la clé API
-        $this->gemini = new Gemini(env('GEMINI_API_KEY'));
+        // Initialize Gemini client with API key
+        $this->client = new Client(env('GEMINI_API_KEY'));
     }
 
     public function analyseCv($texteCv, $annonceDescription = '')
     {
         $modelName = 'gemini-1.5-flash';
 
-        // Construire le prompt
+        // Construct prompt
         $prompt = "Analyse ce CV : \n\n$texteCv\n\n";
         $prompt .= "1. Extraire les compétences principales (liste séparée par virgules).\n";
         $prompt .= "2. Calculer score profil (0-100) basé sur âge, diplôme, expérience.\n";
@@ -30,15 +30,13 @@ class GeminiService
         $prompt .= "Répondre en JSON : { \"competences\": \"liste,sep,virgules\", \"score_profil\": 0, \"score_cv\": 0, \"score_global\": 0, \"poste_suggere\": \"suggestion poste\" }";
 
         try {
-            // Appeler l'API Gemini
-            $response = $this->gemini->generativeModel($modelName)->generateContent([
-                new TextPart($prompt)
-            ]);
+            // Call Gemini API
+            $response = $this->client->geminiPro()->generateContent(new TextPart($prompt));
 
-            // Extraire le texte brut
+            // Extract raw text
             $generatedText = $response->text();
 
-            // Nettoyer et parser JSON
+            // Clean and parse JSON
             $generatedText = trim($generatedText, '`');
             if (stripos($generatedText, 'json') === 0) {
                 $generatedText = substr($generatedText, strpos($generatedText, '{'));
