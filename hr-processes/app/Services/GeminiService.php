@@ -223,4 +223,53 @@ class GeminiService
         
         return 'Développeur Junior';
     }
+
+    public function generateQCM($annonceDescription)
+    {
+        $modelName = 'gemini-1.5-flash';
+
+        // Prompt pour générer 10 QCM techniques basés sur la description de l'annonce
+        $prompt = "Génère exactement 10 questions QCM pour un test de recrutement basé sur cette description de poste :\n\n";
+        $prompt .= $annonceDescription . "\n\n";
+        $prompt .= "Instructions strictes :\n";
+        $prompt .= "1. Chaque QCM doit être technique et pertinent pour le poste.\n";
+        $prompt .= "2. Chaque QCM doit avoir exactement 4 options (A, B, C, D).\n";
+        $prompt .= "3. Indique l'index de la bonne réponse (0 pour A, 1 pour B, etc.).\n";
+        $prompt .= "4. Réponds UNIQUEMENT avec un objet JSON valide, sans markdown, sans texte supplémentaire.\n\n";
+        $prompt .= "Format JSON exact :\n";
+        $prompt .= '[{"question": "Texte de la question ?", "options": ["Option A", "Option B", "Option C", "Option D"], "correct_index": 0}, ...]';  // Array de 10 objets
+
+        try {
+            $response = $this->client->generativeModel($modelName)->generateContent(new TextPart($prompt));
+            $generatedText = $response->text();
+
+            Log::info('Réponse brute de Gemini pour QCM: ' . $generatedText);
+
+            // Nettoyer la réponse (réutilise votre méthode cleanGeminiResponse)
+            $cleanedJson = $this->cleanGeminiResponse($generatedText);
+            Log::info('JSON nettoyé pour QCM: ' . $cleanedJson);
+
+            // Parser le JSON (doit être un array de 10 objets)
+            $qcms = json_decode($cleanedJson, true);
+            
+            if (json_last_error() !== JSON_ERROR_NONE || !is_array($qcms) || count($qcms) !== 10) {
+                Log::error('Erreur JSON pour QCM: ' . json_last_error_msg());
+                throw new \Exception('Invalid JSON response from Gemini for QCM');
+            }
+
+            // Valider chaque QCM
+            foreach ($qcms as &$qcm) {
+                if (!isset($qcm['question']) || !isset($qcm['options']) || !is_array($qcm['options']) || count($qcm['options']) !== 4 || !isset($qcm['correct_index']) || !is_numeric($qcm['correct_index']) || $qcm['correct_index'] < 0 || $qcm['correct_index'] > 3) {
+                    throw new \Exception('Invalid QCM structure from Gemini');
+                }
+            }
+
+            return $qcms;
+
+        } catch (\Exception $e) {
+            Log::error('Gemini API error for QCM: ' . $e->getMessage());
+            return [];  // Retour vide en cas d'erreur, pour ne pas bloquer la création d'annonce
+        }
+    }
+
 }
