@@ -12,7 +12,7 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\CvController;
 use App\Http\Controllers\TestController;
 use App\Http\Controllers\AffiliationController;
-
+use App\Http\Models\Annonce;
 
 // Routes publiques
 Route::get('/', function () {
@@ -78,6 +78,13 @@ Route::middleware(['auth'])->group(function () {
 
     Route::resource('affiliations', AffiliationController::class)->only(['index', 'create', 'store', 'show', 'edit', 'update', 'destroy']);
     Route::post('affiliations/{affiliation}/renouveler', [AffiliationController::class, 'renouveler'])->name('affiliations.renouveler');
+
+    Route::get('/annonces/{annonce}/test', function (Annonce $annonce) {
+        if ($annonce->test) {
+            return redirect()->route('tests.pass', $annonce->test->id);
+        }
+        return redirect()->back()->with('error', 'Aucun test associé.');
+    })->name('annonces.test');
 
 
 });
