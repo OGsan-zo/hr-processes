@@ -17,6 +17,9 @@
                 @csrf @method('DELETE')
                 <button type="submit">Supprimer</button>
             </form>
+            @if($annonce->test)
+                <a href="{{ route('tests.show', $annonce->test->id) }}">Voir le test associé</a>
+            @endif    
         </li>
     @endforeach
 </ul>
