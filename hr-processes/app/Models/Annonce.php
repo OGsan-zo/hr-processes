@@ -15,5 +15,10 @@ class Annonce extends Model
         'date_fin',
         'statut'
     ];
+    
+    public function test()  // Nouvelle relation
+    {
+        return $this->hasOne(Test::class);
+    }
 }
 

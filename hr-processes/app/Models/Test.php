@@ -11,12 +11,18 @@ class Test extends Model
         'description',
         'duree_minutes',
         'nombre_questions',
-        'statut'
+        'statut',
+        'annonce_id'  // Ajout
     ];
 
     public function questions()
     {
         return $this->hasMany(Question::class);
+    }
+
+    public function annonce()  // Nouvelle relation
+    {
+        return $this->belongsTo(Annonce::class);
     }
 
     public function getDureeFormattedAttribute()
