@@ -40,6 +40,10 @@ return [
             'driver' => 'session',
             'provider' => 'users',
         ],
+        'candidat' => [  // Nouveau guard pour candidats
+            'driver' => 'session',
+            'provider' => 'candidats',
+        ],    
     ],
 
     /*
@@ -64,6 +68,12 @@ return [
             'driver' => 'eloquent',
             'model' => env('AUTH_MODEL', App\Models\User::class),
         ],
+    
+        'candidats' => [  // Provider pour table candidats
+            'driver' => 'eloquent',
+            'model' => App\Models\Candidat::class,
+        ],
+        
 
         // 'users' => [
         //     'driver' => 'database',
