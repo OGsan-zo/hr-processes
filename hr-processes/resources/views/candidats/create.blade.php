@@ -29,6 +29,14 @@
                 <input type="text" name="prenom" class="form-control" required>
             </div>
             <div class="mb-3">
+                <label class="form-label">Email :</label>
+                <input type="email" name="email" class="form-control" required>
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Mot de passe (minimum 8 caractères) :</label>
+                <input type="password" name="password" class="form-control" required minlength="8">
+            </div>
+            <div class="mb-3">
                 <label class="form-label">Âge :</label>
                 <input type="number" name="age" min="18" class="form-control" required>
             </div>
