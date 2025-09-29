@@ -53,4 +53,34 @@ class CandidatureController extends Controller
         return redirect()->route('candidatures.selection')->with('success', 'Statut mis à jour.');
     }
 
+    public function showPostulerForm(Annonce $annonce)
+    {
+        return view('candidatures.postuler', compact('annonce'));
+    }
+
+    public function postuler(Request $request, Annonce $annonce)
+    {
+        $candidat = Auth::guard('candidat')->user();  // Candidat authentifié
+
+        // Valider (pas de CV upload)
+        $request->validate([
+            // Ajoutez d'autres champs si besoin, ex. lettre motivation
+        ]);
+
+        Candidature::create([
+            'candidat_id' => $candidat->id,
+            'annonce_id' => $annonce->id,
+            'cv' => $candidat->cv,  // Utiliser le CV existant du candidat
+            'statut' => 'en_attente'
+        ]);
+
+        // Rediriger vers le test si existe
+        if ($annonce->test) {
+            return redirect()->route('tests.pass', $annonce->test->id)->with('success', 'Candidature soumise. Passez le test maintenant.');
+        }
+
+        return redirect()->route('candidat.annonces')->with('success', 'Candidature soumise.');
+    }
+
+
 }
