@@ -10,7 +10,7 @@ class CandidatAuthController extends Controller
 {
     public function showLoginForm()
     {
-        return view('candidat.login');  // Créez cette vue
+        return view('candidats.login');  // Créez cette vue
     }
 
     public function login(Request $request)
