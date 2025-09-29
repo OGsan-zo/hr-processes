@@ -3,12 +3,14 @@
 namespace App\Http\Controllers;
 
 use App\Models\Candidat;
+use App\Models\Annonce;
 use App\Models\Employe;
 use App\Models\Candidature;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Smalot\PdfParser\Parser;
-use App\Services\GeminiService;  // AJOUT : Service Gemini
+use App\Services\GeminiService;
+
 
 class CandidatController extends Controller
 {
@@ -230,5 +232,10 @@ class CandidatController extends Controller
         };
     }
 
+    public function annonces()
+    {
+        $annonces = Annonce::where('statut', 'active')->get();
+        return view('candidats.annonces', compact('annonces'));
+    }
 
 }
