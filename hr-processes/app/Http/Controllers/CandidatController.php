@@ -10,7 +10,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Smalot\PdfParser\Parser;
 use App\Services\GeminiService;
-
+use Illuminate\Support\Facades\Hash;
 
 class CandidatController extends Controller
 {
