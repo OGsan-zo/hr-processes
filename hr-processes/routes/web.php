@@ -90,9 +90,9 @@ Route::middleware(['auth'])->group(function () {
 });
 
 Route::prefix('candidat')->group(function () {
-    Route::get('/login', [App\Http\Controllers\Auth\CandidatAuthController::class, 'showLoginForm'])->name('candidats.login');
+    Route::get('/login', [App\Http\Controllers\Auth\CandidatAuthController::class, 'showLoginForm'])->name('candidat.login');
     Route::post('/login', [App\Http\Controllers\Auth\CandidatAuthController::class, 'login']);
-    Route::post('/logout', [App\Http\Controllers\Auth\CandidatAuthController::class, 'logout'])->name('candidats.logout');
+    Route::post('/logout', [App\Http\Controllers\Auth\CandidatAuthController::class, 'logout'])->name('candidat.logout');
 
     // Inscription déjà existante via /candidats/create, mais si besoin : Route::get('/register', ...);
 });
