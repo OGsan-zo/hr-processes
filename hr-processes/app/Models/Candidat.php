@@ -2,11 +2,13 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
+use Illuminate\Foundation\Auth\User as Authenticatable;  // Utiliser Authenticatable au lieu de Model
+use Illuminate\Notifications\Notifiable;
 
-class Candidat extends Model
+class Candidat extends Authenticatable  // Changez de Model à Authenticatable
 {
     protected $table = 'candidats';
+    protected $hidden = ['password'];  // Cacher le password
 
     protected $fillable = [
         'nom',
@@ -19,7 +21,9 @@ class Candidat extends Model
         'score_competences',
         'score_profil',
         'score_global',
-        'poste_suggere'
+        'poste_suggere',
+        'email',  // Ajoutez si pas déjà (pour login)
+        'password',  // Ajoutez un champ password dans la migration si pas déjà (hashé)
     ];
 
     /**
