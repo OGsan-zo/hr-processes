@@ -90,9 +90,15 @@ Route::middleware(['auth'])->group(function () {
 });
 
 Route::prefix('candidat')->group(function () {
-    Route::get('/login', [App\Http\Controllers\Auth\CandidatAuthController::class, 'showLoginForm'])->name('candidat.login');
+    Route::get('/login', [App\Http\Controllers\Auth\CandidatAuthController::class, 'showLoginForm'])->name('candidats.login');
     Route::post('/login', [App\Http\Controllers\Auth\CandidatAuthController::class, 'login']);
-    Route::post('/logout', [App\Http\Controllers\Auth\CandidatAuthController::class, 'logout'])->name('candidat.logout');
+    Route::post('/logout', [App\Http\Controllers\Auth\CandidatAuthController::class, 'logout'])->name('candidats.logout');
 
     // Inscription déjà existante via /candidats/create, mais si besoin : Route::get('/register', ...);
+});
+
+Route::middleware('auth:candidat')->group(function () {
+    Route::get('/candidat/annonces', [App\Http\Controllers\CandidatController::class, 'annonces'])->name('candidats.annonces');
+    Route::get('/candidat/postuler/{annonce}', [App\Http\Controllers\CandidatureController::class, 'showPostulerForm'])->name('candidats.postuler');
+    Route::post('/candidat/postuler/{annonce}', [App\Http\Controllers\CandidatureController::class, 'postuler']);
 });
