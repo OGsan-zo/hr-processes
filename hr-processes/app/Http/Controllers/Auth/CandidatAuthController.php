@@ -21,7 +21,7 @@ class CandidatAuthController extends Controller
         ]);
 
         if (Auth::guard('candidat')->attempt(['email' => $request->email, 'password' => $request->password])) {
-            return redirect()->route('candidat.annonces');  // Redirige vers liste annonces
+            return redirect()->route('candidats.annonces');  // Redirige vers liste annonces
         }
 
         return back()->withErrors(['email' => 'Identifiants incorrects.']);
