@@ -28,6 +28,9 @@ class CandidatController extends Controller
             'diplome' => 'nullable|string|max:150',
             'cv' => 'nullable|file|mimes:pdf|max:2048',
             'competences' => 'nullable|string|max:255',
+            'email' => 'required|email|unique:candidats,email',
+            'password' => 'required|string|min:8',
+
         ]);
 
         $cvPath = null;
@@ -69,6 +72,8 @@ class CandidatController extends Controller
             'score_profil' => $score_profil,
             'score_global' => $score_global,
             'poste_suggere' => $poste_suggere,
+            'email' => $request->email,
+            'password' => Hash::make($request->password),        
         ]);
 
         return redirect()->route('candidats.index')->with('success', 'Candidat enregistré avec succès.');
