@@ -6,6 +6,7 @@ use App\Models\Candidature;
 use App\Models\Candidat;
 use App\Models\Annonce;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class CandidatureController extends Controller
 {
@@ -79,7 +80,7 @@ class CandidatureController extends Controller
             return redirect()->route('tests.pass', $annonce->test->id)->with('success', 'Candidature soumise. Passez le test maintenant.');
         }
 
-        return redirect()->route('candidat.annonces')->with('success', 'Candidature soumise.');
+        return redirect()->route('candidats.annonces')->with('success', 'Candidature soumise.');
     }
 
 
