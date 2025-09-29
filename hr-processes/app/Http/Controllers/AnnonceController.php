@@ -34,7 +34,7 @@ class AnnonceController extends Controller
 
         $annonce = Annonce::create($request->all());
 
-        // Génération automatique des QCM via Gemini
+            // Génération automatique des QCM via Gemini
         $geminiService = app(GeminiService::class);  // Résolvez le service
         $qcms = $geminiService->generateQCM($annonce->description);
 
