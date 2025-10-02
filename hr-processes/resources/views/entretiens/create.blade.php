@@ -79,11 +79,12 @@
         <div style="margin-bottom: 20px;">
             <label style="display: block; margin-bottom: 5px; font-weight: bold;">Statut :</label>
             <select name="statut" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 4px;">
-                <option value="planifié" {{ old('statut', 'planifié') == 'planifié' ? 'selected' : '' }}>Planifié</option>
-                <option value="confirmé" {{ old('statut') == 'confirmé' ? 'selected' : '' }}>Confirmé</option>
-                <option value="reporté" {{ old('statut') == 'reporté' ? 'selected' : '' }}>Reporté</option>
+                <option value="planifie" {{ old('statut', 'planifie') == 'planifie' ? 'selected' : '' }}>Planifié</option>
+                <option value="termine" {{ old('statut') == 'termine' ? 'selected' : '' }}>Terminé</option>
+                <option value="annule" {{ old('statut') == 'annule' ? 'selected' : '' }}>Annulé</option>
             </select>
         </div>
+
 
         <div style="text-align: center;">
             <button type="submit" style="background: #007bff; color: white; padding: 12px 30px; border: none; border-radius: 4px; font-size: 16px; cursor: pointer;">
